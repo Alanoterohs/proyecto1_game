@@ -1,7 +1,5 @@
 import random
 
-print("Abril, Diego (86093) - Álvarez, Martín Alejandro (92544) - Mattio, Facundo Ezequiel (81834)\
-- Otero, Alan Angel (93106) - Vagni, José David (91814)")
 print("*" * 50)
 print("\nTrabajo Practico 1 AED: el juego de dados\n")
 print("*" * 50)
