@@ -11,7 +11,9 @@ import random
 
 player1 = input('\nNombre del primer jugador: ')
 player2 = input('\nNombre del segundo jugador: ')
-score1 = score2 = maxScore1 = maxScore2 = roundsWon1 = roundsWon2 = 0
+maxScore1 = maxScore2 = 0
+rounds = roundsWon1 = roundsWon2 = roundsTied = 0
+average = hitPlayer1 = hitPlayer2 = percentagePlayer1 = percentagePlayer2 = 0
 objetivo = int(input('Puntaje a alcanzar(mayor que 10, por favor): '))
 
 if objetivo < 10:
@@ -35,6 +37,14 @@ def turno(player):
     assert apuesta == 1 or apuesta == 2
     input("\n*** Presiona enter para lanzar los dados ***")
     return apuesta
+
+def par_impar(a,b,c, apuesta):
+    hit = 0
+    if (a + b + c) % 2 == 0 and apuesta == 2:
+        hit+=1
+    elif (a + b + c) % 2 != 0 and apuesta == 1:
+        hit+=1
+    return hit
 
 def jugada(a, b, c, apuesta):
     dadoMayor = max(a, b, c)
@@ -61,36 +71,60 @@ def jugada(a, b, c, apuesta):
         score -= dadoMenor
         print("Por poco lo logras \nMejor suerte la proxima")
 
-    print("\n\nPuntaje de este turno:", score)
     return score
 
 # correntScore = jugada(a, b, c, apuesta)
 # print("\n\nPuntaje de este turno:", correntScore)
 
-while maxScore1 < objetivo or maxScore2 < objetivo:
-    a, b, c = tiradaDados()
+
+while maxScore1 < objetivo and maxScore2 < objetivo:
     apuesta = turno(player1)
+    a, b, c = tiradaDados()
+    hitPlayer1 += par_impar(a, b, c, apuesta)
     maxScore1 += jugada(a, b, c, apuesta)
     eachScore1 = jugada(a, b, c, apuesta)
+    print("\n\nPuntaje de este turno:", eachScore1)
 
-    a, b, c = tiradaDados()
     apuesta = turno(player2)
+    a, b, c = tiradaDados()
+    hitPlayer2 += par_impar(a, b, c, apuesta)
     maxScore2 += jugada(a, b, c, apuesta)
     eachScore2 = jugada(a, b, c, apuesta)
+    print("\n\nPuntaje de este turno:", eachScore2)
+
+    rounds+= 1
 
     if eachScore1 > eachScore2:
-        roundsWon1++
+        roundsWon1 = roundsWon1 + 1
+    elif eachScore2 > eachScore1:
+        roundsWon1 = roundsWon1 + 1
     else:
-        roundsWon2++
+        roundsTied = roundsTied + 1
 
-print("\n\nEl puntaje del jugador: ", player1, ' es: ', maxScore1)
-print("\nEl puntaje del jugador: ", player2, ' es: ', maxScore2)
 
+print("\n\nEl puntaje del jugador:", player1, ' es: ', maxScore1)
+print("\nEl puntaje del jugador:", player2, ' es: ', maxScore2, '\n')
+
+percentagePlayer1 = (hitPlayer1 * 100 // rounds)
+percentagePlayer2 = (hitPlayer2 * 100 // rounds)
 
 if maxScore1 > maxScore2:
-    print('\nEl ganador es: ', player1)
+    print('El ganador es:', player1)
+    if percentagePlayer1 > percentagePlayer2:
+            print('El ganador tuvo mayor porcentaje de aciertos')
+    elif percentagePlayer1 < percentagePlayer2:
+            print('El perdedor tuvo mayor porcentaje de aciertos')
+    else:
+            print('Mismos Porcentajes')
+
 elif maxScore2 > maxScore1:
-    print('\nEl ganador es: ', player2)
+    print('El ganador es:', player2)
+    if percentagePlayer2 > percentagePlayer1:
+            print('El ganador tuvo mayor porcentaje de aciertos')
+    elif percentagePlayer2 < percentagePlayer1:
+            print('El perdedor tuvo mayor porcentaje de aciertos')
+    else:
+            print('Mismos Porcentajes')
 else:
     if eachScore1 > eachScore2:
         print('\nEl ganador es: ', player1)
@@ -98,3 +132,22 @@ else:
         print('\nEl ganador es: ', player2)
     else:
         print('\n ¡Hay un empate!')
+
+## Estadísticas
+
+# La cantidad de jugadas realizadas (recordando que una jugada consiste en los turnos de ambos jugadores).
+print('\n La cantidad de jugadas realizadas son: ', rounds)
+
+# Si hubo al menos una jugada con puntaje empatado entre ambos jugadores.
+if roundsTied > 0:
+    print('hubo al menos una jugada terminada en empate. En total: ', roundsTied)
+
+# El puntaje promedio obtenido por jugada por cada jugador.
+
+
+
+
+print('\n Porcentaje de aciertos del jugador: ', player1, '->', percentagePlayer1, '%')
+print('\n Porcentaje de aciertos del jugador: ', player2, '->', percentagePlayer2, '%')
+
+# Si algún jugador ganó en al menos 3 turnos seguidos.
